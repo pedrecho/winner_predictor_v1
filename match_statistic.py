@@ -22,8 +22,8 @@ def match_result(href):
 
 
 def all_matches_results(fileName, fileLinks):
-    links = open(fileLinks + '.txt', 'r').read().split('\n')
-    f = open(fileName + '.csv', 'w')
+    links = open("./dataset/" + fileLinks + '.txt', 'r').read().split('\n')
+    f = open("./dataset/" + fileName + '.csv', 'w')
     titles = ('Team1', 'Team2', 'Score1', 'Score2')
     f.write(','.join(titles) + '\n')
     for link in links:
@@ -32,13 +32,13 @@ def all_matches_results(fileName, fileLinks):
 
 
 def assign_team_number(fileName, fileMatches):
-    df = pd.read_csv(fileMatches + '.csv')
-    open(fileMatches + '.txt', 'w').write('\n'.join(set(df['Team1']) | set(df['Team2'])))
+    df = pd.read_csv("./dataset/" + fileMatches + '.csv')
+    open("./dataset/" + fileMatches + '.txt', 'w').write('\n'.join(set(df['Team1']) | set(df['Team2'])))
 
 def match_to_numbers(fileName, fileTeams, fileMatches):
-    teams = open(fileTeams + '.txt', 'r').read().split('\n')
-    data = open(fileMatches + '.csv', 'r').read().split('\n')[1:]
-    file = open(fileName + '.txt', "w")
+    teams = open("./dataset/" + fileTeams + '.txt', 'r').read().split('\n')
+    data = open("./dataset/" + fileMatches + '.csv', 'r').read().split('\n')[1:]
+    file = open("./dataset/" + fileName + '.txt', "w")
     for item in data:
         text = item.split(',')
         team1 = teams.index(text[0])

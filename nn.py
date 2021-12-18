@@ -6,7 +6,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.metrics import r2_score, mean_squared_error
 
 
-data = pd.read_csv('data.csv', sep=',')
+data = pd.read_csv("./dataset/" + 'data.csv', sep=',')
 # print(data.head())
 
 x_train, x_test, y_train, y_test = (train_test_split(data.iloc[:, 0:-1], data['win'], test_size=0.25))

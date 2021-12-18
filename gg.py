@@ -33,7 +33,7 @@ def get_links(filename, firstDate, lastDate=datetime.datetime.now().date()):
             if href != '':
                 links.append("https://cyberscore.live" + item.get('href'))
         currentDate += deltaDate
-    open(filename + '.txt', 'w').write('\n'.join(links))
+    open("./dataset/" + filename + '.txt', 'w').write('\n'.join(links))
 
 
 def find_all_heroes():
@@ -61,7 +61,7 @@ def get_hero_list(filename):
             items.append(hero)
             items.append(hero)
     items = list(map(lambda x: x.split(' ')[-1], items[1::2]))
-    open(filename + '.txt', 'w').write('\n'.join(items))
+    open("./dataset/" + filename + '.txt', 'w').write('\n'.join(items))
 
 
 def team_win_rate(team):
@@ -108,23 +108,6 @@ def find_statistic(href):
         item.append(team_winrate2)
     return massiv
 
-def match_result(href):
-    driver.get(href)
-    time.sleep(1)
-    html = driver.page_source
-    soup = BeautifulSoup(html, features='html.parser')
-    teams = list(map(lambda x: x.find("div",class_="b-title bt16 bold").get_text(), soup.find_all("div",class_="team-name")))
-    score = soup.find_all("div", class_="score")[2].find("div",class_="b-title bt16 bold").get_text().split(':')
-    teams.append(score[0])
-    teams.append(score[1])
-    return teams
-
-def all_matches_results():
-    links = open('links2.txt', 'r').read().split('\n')
-    f = open('matches_result.txt','w')
-    for link in links:
-        f.write('; '.join(match_result(link)))
-    f.close()
 
 def hero_name(href):
     return href.replace("https://s.cyberscore.live/wp-content/uploads/2021/09/hero-", "").replace(
@@ -132,11 +115,11 @@ def hero_name(href):
 
 
 def read_games(fileData, fileLinks, fileHeroes, add=True):
-    links = open(fileLinks + '.txt', 'r').read().split('\n')
-    heroes = open(fileHeroes + '.txt', 'r').read().split('\n')
+    links = open("./dataset/" + fileLinks + '.txt', 'r').read().split('\n')
+    heroes = open("./dataset/" + fileHeroes + '.txt', 'r').read().split('\n')
     if not add:
         title = 'r_' + ',r_'.join(heroes) + ',d_' + ',d_'.join(heroes) + ',win\n'
-        open(fileData + '.csv', 'w').write(title)
+        open("./dataset/" + fileData + '.csv', 'w').write(title)
     for link in links:
         statistics = find_statistic(link)
         for item in statistics:
@@ -154,7 +137,7 @@ def read_games(fileData, fileLinks, fileHeroes, add=True):
                 else:
                     record[item[i] + len(heroes)] = '1'
             record.append(str(item[10]))
-            open(fileData + '.csv', 'a').write(','.join(record) + '\n')
+            open("./dataset/" + fileData + '.csv', 'a').write(','.join(record) + '\n')
 
 
 # get_hero_list('heroes')
