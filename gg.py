@@ -124,7 +124,7 @@ def match_result(href):
     teams.append(score[1])
     return teams
 
-def all_mathes_results():
+def all_matches_results():
     links = open('links2.txt', 'r').read().split('\n')
     f = open('matches_result.txt','w')
     for link in links:
