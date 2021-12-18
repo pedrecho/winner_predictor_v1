@@ -30,4 +30,20 @@ def all_matches_results(fileName, fileLinks):
     f.close()
 
 
-all_matches_results('matches', 'links3')
+def assign_team_number(fileName, fileMatches):
+    teams_number = []
+    matches = open(fileMatches + '.txt', 'r').read().split('\n')
+    for match in matches:
+        teams_name = match.split(',')
+        for i in range(2):
+            if teams_name[i] not in teams_number:
+                teams_number.append(teams_name[i])
+    open(fileName + '.txt', "w").write("\n".join(teams_number))
+
+
+def match_to_numbers(fileName):
+    return
+
+assign_team_number("teams_list", "matches")
+
+driver.close()
