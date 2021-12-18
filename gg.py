@@ -74,7 +74,7 @@ def team_win_rate(team):
     time.sleep(1)
     html = driver.page_source
     soup = BeautifulSoup(html, features="html.parser")
-    return int(float(soup.find_all("table", class_="table-striped")[2].find("tbody").find_all("tr")[2].find_all("td")[2].get("data-value")))/100
+    return int(float(soup.find_all("table", class_="table-striped")[2].find("tbody").find_all("tr")[0].find_all("td")[2].get("data-value")))/100
 
 
 def find_statistic(href):
@@ -82,6 +82,7 @@ def find_statistic(href):
     time.sleep(1)
     html = driver.page_source
     soup = BeautifulSoup(html, features='html.parser')
+    team_names = list(map(lambda x: x.find("div",class_="b-title bt16 bold").get_text(), soup.find_all("div",class_="team-name")))
     massiv = []
     maps_href = list(
         map(lambda x: "https://cyberscore.live" + x.get('href'), soup.find("div", class_="tab-controls").find_all("a")))
@@ -99,8 +100,31 @@ def find_statistic(href):
             if len(images_src) == 11:
                 massiv.append(copy.deepcopy(images_src))
         time.sleep(1)
+    team_winrate1 = team_win_rate(team_names[0])
+    time.sleep(1)
+    team_winrate2 = team_win_rate(team_names[1])
+    for item in massiv:
+        item.append(team_winrate1)
+        item.append(team_winrate2)
     return massiv
 
+def match_result(href):
+    driver.get(href)
+    time.sleep(1)
+    html = driver.page_source
+    soup = BeautifulSoup(html, features='html.parser')
+    teams = list(map(lambda x: x.find("div",class_="b-title bt16 bold").get_text(), soup.find_all("div",class_="team-name")))
+    score = soup.find_all("div", class_="score")[2].find("div",class_="b-title bt16 bold").get_text().split(':')
+    teams.append(score[0])
+    teams.append(score[1])
+    return teams
+
+def all_matches_results():
+    links = open('links2.txt', 'r').read().split('\n')
+    f = open('matches_result.txt','w')
+    for link in links:
+        f.write('; '.join(match_result(link)))
+    f.close()
 
 def hero_name(href):
     return href.replace("https://s.cyberscore.live/wp-content/uploads/2021/09/hero-", "").replace(
@@ -136,5 +160,4 @@ def read_games(fileData, fileLinks, fileHeroes, add=True):
 # get_hero_list('heroes')
 # get_links('links4', datetime.date.fromisoformat('2021-09-26'), datetime.date.fromisoformat('2021-10-29'))
 # read_games('data', 'links4', 'heroes')
-
 driver.close()
