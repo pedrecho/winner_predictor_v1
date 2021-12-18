@@ -16,7 +16,6 @@ def match_result(href):
     soup = BeautifulSoup(html, features='html.parser')
     teams = list(map(lambda x: x.find("div", class_="b-title bt16 bold").get_text(), soup.find_all("div", class_="team-name")))
     score = soup.find_all("div", class_="score")[2].find("div", class_="b-title bt16 bold").get_text().split(':')
-    # print(score)
     teams.append(score[0])
     teams.append(score[1])
     return teams
@@ -34,14 +33,24 @@ def all_matches_results(fileName, fileLinks):
 
 def assign_team_number(fileName, fileMatches):
     df = pd.read_csv(fileMatches + '.csv')
-    open(fileName + '.txt', 'w').write('\n'.join(set(df['Team1']) | set(df['Team2'])))
+    open(fileMatches + '.txt', 'w').write('\n'.join(set(df['Team1']) | set(df['Team2'])))
 
+def match_to_numbers(fileName, fileTeams, fileMatches):
+    teams = open(fileTeams + '.txt', 'r').read().split('\n')
+    data = open(fileMatches + '.csv', 'r').read().split('\n')[1:]
+    file = open(fileName + '.txt', "w")
+    for item in data:
+        text = item.split(',')
+        team1 = teams.index(text[0])
+        team2 = teams.index(text[1])
+        for _ in range(int(text[2])):
+            file.write(str(team1) + ',' + str(team2) + '\n')
+        for _ in range(int(text[3])):
+            file.write(str(team2) + ',' + str(team1) + '\n')
+    file.close()
 
-def match_to_numbers(fileName):
-    return
-
-
-# all_matches_results('matches', 'links2')
-assign_team_number("teams_list", "matches")
+# all_matches_results('matches', 'links')
+# assign_team_number("teams_list", "matches")
+match_to_numbers('matches_list', 'teams_list', 'matches')
 
 driver.close()
