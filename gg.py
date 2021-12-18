@@ -82,9 +82,7 @@ def find_statistic(href):
     time.sleep(1)
     html = driver.page_source
     soup = BeautifulSoup(html, features='html.parser')
-
     team_names = list(map(lambda x: x.find("div",class_="b-title bt16 bold").get_text(), soup.find_all("div",class_="team-name")))
-
     massiv = []
     maps_href = list(
         map(lambda x: "https://cyberscore.live" + x.get('href'), soup.find("div", class_="tab-controls").find_all("a")))
@@ -102,15 +100,12 @@ def find_statistic(href):
             if len(images_src) == 11:
                 massiv.append(copy.deepcopy(images_src))
         time.sleep(1)
-
     team_winrate1 = team_win_rate(team_names[0])
     time.sleep(1)
     team_winrate2 = team_win_rate(team_names[1])
-
     for item in massiv:
         item.append(team_winrate1)
         item.append(team_winrate2)
-
     return massiv
 
 def match_result(href):
@@ -165,5 +160,4 @@ def read_games(fileData, fileLinks, fileHeroes, add=True):
 # get_hero_list('heroes')
 # get_links('links4', datetime.date.fromisoformat('2021-09-26'), datetime.date.fromisoformat('2021-10-29'))
 # read_games('data', 'links4', 'heroes')
-all_mathes_results()
 driver.close()
